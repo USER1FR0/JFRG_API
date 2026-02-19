@@ -1,36 +1,34 @@
-import { Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
-import { TaskService } from "./task.service";
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { TaskService } from './task.service';
+import { CreateTaskDto } from './dto/create-task.dto';
 
-
-
-@Controller("api/task")
+@Controller('api/task')
 export class TaskController {
-    constructor(private taskService: TaskService) {}
-    @Get()
-    public list(): string {
-        return this.taskService.task();
-    }
+  constructor(private taskSvc: TaskService) {}
 
-    @Post("create")
-    public create(task: any): string {
-        return this.taskService.create(task);
-    }
+  @Get()
+  public list(): string {
+    return this.taskSvc.task();
+  }
 
-   
-    @Delete("delete/:id")
-    public delete(id:number): string {
-        return this.taskService.delete(id);
-    }
+  @Post()
+  public insertTask(@Body() task: CreateTaskDto): any{
+    console.error("insert ", typeof task);
+    return this.taskSvc.create(task);
+  }
 
-    @Put("update")
-    public update(@Param("id") id:number): string {
-        return this.taskService.update(id, "datos de la tarea");
-    }   
-          
-    @Get(":id")
-    public findById(@Param("id") id:String): string {
-        return this.taskService.findById(Number(id));
-    }
+  @Delete('delete/:id')
+  public delete(id: number): string {
+    return this.taskSvc.delete(id);
+  }
 
-    
-}   
+  @Put('update')
+  public update(@Param('id') id: number): string {
+    return this.taskSvc.update(id, 'datos de la tarea');
+  }
+
+  @Get(':id')
+  public findById(@Param('id') id: String): string {
+    return this.taskSvc.findById(Number(id));
+  }
+}
