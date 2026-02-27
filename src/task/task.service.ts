@@ -1,9 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
+import { Client } from 'pg';
+import { Task } from './entities/task.entity';
 
 @Injectable()
 export class TaskService {
-  public task(): string {
-    return 'listado de tareas';
+  constructor(@Inject('POSTGRES_CONNECTION') private pg: Client) {}
+
+  public async getAllTasks(): Promise<Task[]> {
+    const query = `SELECT * FROM tasks ORDER BY name ASC`;
+
+    const result = await this.pg.query(query);
+
+    return result.rows as Task[];
+  }
+
+  public async task(): Promise<string> {
+    const tasks = await this.getAllTasks();
+    return JSON.stringify(tasks);
   }
 
   public create(task: any): string {

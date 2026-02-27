@@ -6,14 +6,16 @@ import { CreateTaskDto } from './dto/create-task.dto';
 export class TaskController {
   constructor(private taskSvc: TaskService) {}
 
-  @Get()
-  public list(): string {
-    return this.taskSvc.task();
+  // En tu TaskController
+  @Get() // o el decorador que estés usando
+  async task() {
+    // Agrega 'async'
+    return await this.taskSvc.getAllTasks(); // Agrega 'await'
   }
 
   @Post()
-  public insertTask(@Body() task: CreateTaskDto): any{
-    console.error("insert ", typeof task);
+  public insertTask(@Body() task: CreateTaskDto): any {
+    console.error('insert ', typeof task);
     return this.taskSvc.create(task);
   }
 
