@@ -5,12 +5,12 @@ export class updateTaskDto{
     @IsOptional()
     @IsString()
     @MinLength(3,{message: `Debe tener almenos 3 caracteres`})
-    name: String;
+    name: string;
 
     @MinLength(3,{message: `Debe tener almenos 3 caracteres`})
     @IsOptional()
     @IsString()
-    description: String;
+    description: string;
 
     @IsOptional()
     @IsBoolean()
