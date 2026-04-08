@@ -1,18 +1,20 @@
-import { IsBoolean, IsOptional, IsString, MinLength } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, MaxLength, MinLength, IsBoolean, IsInt } from "class-validator";
 
+export class UpdateTaskDto{
 
-export class updateTaskDto{
     @IsOptional()
-    @IsString()
-    @MinLength(3,{message: `Debe tener almenos 3 caracteres`})
-    name: string;
+    @IsString({message: "El nombre debe ser una cadena"})
+    @MinLength(3, {message: "El nombre debe tener al menos 3 caracteres"})
+    @MaxLength(100, {message: "El nombre debe tener menos de 100 caracteres"})
+    name!: string;
 
-    @MinLength(3,{message: `Debe tener almenos 3 caracteres`})
     @IsOptional()
-    @IsString()
-    description: string;
+    @IsString({message: "La descripción debe ser una cadena"})
+    @MinLength(3, {message: "La descripción debe tener al menos 3 caracteres"})
+    @MaxLength(100, {message: "La descripción debe tener menos de 100 caracteres"})
+    description!: string;
 
     @IsOptional()
     @IsBoolean()
-    priority: boolean
+    priority!: boolean;
 }

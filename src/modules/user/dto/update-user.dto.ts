@@ -5,10 +5,10 @@ export class UpdateUserDto{
     @IsNotEmpty()
     @MinLength(3)
     @MaxLength(100)
-    name: string;
+    name!: string;
     @IsString()
     @IsNotEmpty()
     @MinLength(3)
     @MaxLength(100)
-    lastName: string;
+    lastName!: string;
 }

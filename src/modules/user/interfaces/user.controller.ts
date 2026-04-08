@@ -26,7 +26,7 @@ export class UserController {
 
     @Post()
     public async insertUser(@Body() user: CreateUserDto): Promise<User>{
-        const encryptedPassword = await this.utilService.hashPassword(user.password);
+        const encryptedPassword = await this.utilService.hash(user.password);
         user.password = encryptedPassword;
         const result = await this.userService.insertUser(user);
 

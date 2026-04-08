@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from '../dto/create-task.dto';
-import { updateTaskDto } from '../dto/update-task.dto';
+import { UpdateTaskDto } from '../dto/update-task.dto';
 import { Task } from '@prisma/client'; 
 
 @Controller('api/task')
@@ -34,7 +34,7 @@ export class TaskController {
   // El retorno es una Task única
   public async update(
     @Param('id', ParseIntPipe) id: number, 
-    @Body() task: updateTaskDto
+    @Body() task: UpdateTaskDto
   ): Promise<Task> {
     try {
       return await this.taskSvc.updateTask(id, task);
