@@ -9,13 +9,17 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
+  Req
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
 import { Task } from '@prisma/client'; 
+import { AuthGuard } from 'src/common/guards/auth.guard';
 
 @Controller('api/task')
+@UseGuards(AuthGuard) // Asegura que todas las rutas requieran autenticación
 export class TaskController {
   constructor(private taskSvc: TaskService) {}
 
@@ -26,7 +30,8 @@ export class TaskController {
 
   @Post()
   // Prisma devuelve el objeto creado, no un array
-  public async insertTask(@Body() task: CreateTaskDto): Promise<Task> {
+  public async insertTask(@Body() task: CreateTaskDto, @Req() req:any): Promise<Task> {
+    task.user_id = req['user'].id;
     return this.taskSvc.insertTask(task); // Verifica que en el service sea "insertTask" (con 't')
   }
 

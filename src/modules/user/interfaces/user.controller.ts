@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseIntPipe, Post, Put, UseGuards} from "@nestjs/common";
 import { UserService } from "./user.service";
 import { User } from "./../entities/user.entity";
 import { CreateUserDto } from "./../dto/create-user.dto";
 import { UpdateUserDto } from "./../dto/update-user.dto";
 import { UtilService } from "src/common/services/util.service";
+import { AuthGuard } from "src/common/guards/auth.guard";
 
 @Controller('api/user')
 export class UserController {
@@ -11,11 +12,13 @@ export class UserController {
                 private utilService: UtilService) {}
 
     @Get()
+    @UseGuards(AuthGuard)
     getAllUsers(): Promise<User[]>{
         return this.userService.getAllUsers();
     }
 
     @Get(":id")
+    @UseGuards(AuthGuard)
     public async listUserById(@Param("id", ParseIntPipe) id: number): Promise<User>{
         const result = await this.userService.getUserById(id);
 
@@ -25,6 +28,7 @@ export class UserController {
     }
 
     @Post()
+    //@UseGuards(AuthGuard)
     public async insertUser(@Body() user: CreateUserDto): Promise<User>{
         const encryptedPassword = await this.utilService.hash(user.password);
         user.password = encryptedPassword;
@@ -36,6 +40,7 @@ export class UserController {
     }
 
     @Put(":id")
+    @UseGuards(AuthGuard)
     public async updateUser(@Param("id", ParseIntPipe) id: number, @Body() user: UpdateUserDto): Promise<User>{
         return this.userService.updateUser(id, user);
     }
