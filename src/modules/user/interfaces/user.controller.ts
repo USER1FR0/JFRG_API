@@ -46,6 +46,7 @@ export class UserController {
     }
 
     @Delete(":id")
+    @UseGuards(AuthGuard)
     public async deleteUser(@Param("id", ParseIntPipe) id: number): Promise<boolean>{
         try {
             await this.userService.deleteUser(id);
