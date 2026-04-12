@@ -26,6 +26,7 @@ model Task {
   description String   @db.Text             // Cambiado de LongText a Text
   priority    Boolean
   user_id     Int
+  completed   Boolean  @default(false)
   createdAt   DateTime @default(now())
   user        User     @relation(fields: [user_id], references: [id])
 

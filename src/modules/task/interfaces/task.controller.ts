@@ -32,7 +32,7 @@ export class TaskController {
   // Prisma devuelve el objeto creado, no un array
   public async insertTask(@Body() task: CreateTaskDto, @Req() req:any): Promise<Task> {
     task.user_id = req['user'].id;
-    return this.taskSvc.insertTask(task); // Verifica que en el service sea "insertTask" (con 't')
+    return this.taskSvc.insertTask(task); 
   }
 
   @Put('update/:id')

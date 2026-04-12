@@ -17,4 +17,8 @@ export class UpdateTaskDto{
     @IsOptional()
     @IsBoolean()
     priority!: boolean;
+
+    @IsOptional()
+    @IsBoolean()
+    completed!: boolean;
 }

@@ -82,6 +82,7 @@ export class AuthController {
     const refresh_token = await this.utilSvc.generateJWT(payload, '7d');
     const hashRT = await this.utilSvc.hash(refresh_token);
     await this.authSvc.updateHash(user.id, hashRT);
+    console.log('Nuevo hash de refresh token:', hashRT);
 
     payload.hashToken = hashRT;
     const access_token = await this.utilSvc.generateJWT(payload);

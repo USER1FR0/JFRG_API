@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { User } from "./../entities/user.entity";
 import { Client } from "pg";
 import { PrismaService } from "src/common/services/prisma.service";
@@ -43,17 +43,24 @@ export class UserService{
     }
 
     public async insertUser(user: CreateUserDto): Promise<User>{
-        const userCreated = await this.prisma.user.create({
-            data: user,
-            select: {
-                id: true,
-                name: true,
-                lastName: true,
-                username: true,
-                password: false
+        try{
+            const userCreated = await this.prisma.user.create({
+                data: user,
+                select: {
+                    id: true,
+                    name: true,
+                    lastName: true,
+                    username: true,
+                    password: false
+                }
+            })
+            return userCreated;
+        }catch(error: any){
+            if (error.code === 'P2002') {
+                throw new HttpException('El nombre de usuario ya está en uso', HttpStatus.CONFLICT);
             }
-        })
-        return userCreated;
+                throw error; 
+        }
     }
 
     public async updateUser(id: number, userUpdate: UpdateUserDto): Promise<User>{
