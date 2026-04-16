@@ -4,6 +4,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import 'dotenv/config';
 import { AllExceptionFilter } from './common/filters/http-exception.filter';
+import { PrismaService } from './common/services/prisma.service';
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -22,7 +24,8 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalFilters(new AllExceptionFilter());
+  const prisma = app.get(PrismaService);
+  app.useGlobalFilters(new AllExceptionFilter(prisma));
 
   const config = new DocumentBuilder()
     .setTitle('API con vulnerabilidades de Seguridad')

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
+import { ConflictException, HttpException, HttpStatus, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { User } from "./../entities/user.entity";
 import { Client } from "pg";
 import { PrismaService } from "src/common/services/prisma.service";
@@ -82,21 +82,35 @@ export class UserService{
 
         //Primero eliminar las tareas del usuario (Considerar segun la logica del negocio, lo ideal seria 
         //que el usuario no pueda ser eliminado si tiene tareas)
-        await this.prisma.task.deleteMany({
+
+        const taskCount = await this.prisma.task.count({
             where: { user_id: id }
-        })
+        });
+
+        if (taskCount > 0) {
+            throw new ConflictException(
+                `No se puede eliminar el usuario. Tiene ${taskCount} tareas asociadas.`
+            );
+        }
 
         //Luego eliminar el usuario 
-        const userDeleted = await this.prisma.user.delete({
-            where: { id },
-            select: {
-                id: true,
-                name: true,
-                lastName: true,
-                username: true,
-                password: false
+        try{
+            return await this.prisma.user.delete({
+                where: { id },
+                select: {
+                    id: true,
+                    name: true,
+                    lastName: true,
+                    username: true,
+                    password: false
+                }
+            })
+            //return userDeleted;
+        }catch(error: any){
+            if (error.code === 'P2025') {
+                throw new NotFoundException(`El usuario con ID ${id} no existe.`);
             }
-        })
-        return userDeleted;
+            throw error;
+        }
     }   
 }

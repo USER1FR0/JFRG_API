@@ -48,11 +48,7 @@ export class UserController {
     @Delete(":id")
     @UseGuards(AuthGuard)
     public async deleteUser(@Param("id", ParseIntPipe) id: number): Promise<boolean>{
-        try {
-            await this.userService.deleteUser(id);
-        } catch (error) {
-            throw new HttpException(`Usuario con id ${id} no encontrado`, HttpStatus.NOT_FOUND);
-        }
+        await this.userService.deleteUser(id);
         return true;
     }
 }
